@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Музейный комплекс - Регистрация</title>
+  <style>
+    body { 
+      font-family: 'Georgia', serif; 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      background-color: rgb(249, 248, 219);
+    }
+    .error { color: red; }
+    .success { color: green; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; }
+    input[type="text"], input[type="email"], input[type="password"], input[type="date"] {
+      width: 100%; 
+      padding: 8px; border: 1px solid #ddd; 
+      border-radius: 4px;
+    }
+    input[type="submit"] { 
+      background-color: transparent;
+      color: #000000;
+      border: 2px solid #000000;
+      padding: 10px 20px; 
+      border-radius: 4px; 
+      cursor: pointer; 
+      transition: all 0.3s;
+    }
+    input[type="submit"]:hover {
+    background-color: #000000;
+    color: rgb(249, 248, 219);
+    }
+  </style>
+</head>
+<body>
+  <% if session[:errors] %>
+    <div class="error">
+      <% session[:errors].each do |error| %>
+        <p><%= error %></p>
+      <% end %>
+    </div>
+    <% session[:errors] = nil %>
+  <% end %>
+
+  <% if session[:success] %>
+    <div class="success">
+      <p><%= session[:success] %></p>
+    </div>
+    <% session[:success] = nil %>
+  <% end %>
+
+  <%= yield %>
+</body>
+</html>
