@@ -75,3 +75,29 @@ post '/register' do
     redirect '/register'
   end
 end
+# Страница входа 
+get '/login' do
+  erb :login
+end
+
+# Обработка входа
+post '/login' do
+  email = params[:email].to_s.strip
+  password = params[:password].to_s
+
+  user = DB.execute("SELECT * FROM visitor WHERE email = ?", [email]).first
+
+  if user && BCrypt::Password.new(user['password_account']) == password
+    session[:user_id] = user['id']
+    session[:success] = "Добро пожаловать, #{user['first_name']}!"
+    redirect '/'
+  else
+    session[:errors] = ["Неверный email или пароль"]
+    redirect '/login'
+  end
+end
+# Выход
+get '/logout' do
+  session.clear
+  redirect '/'
+end
