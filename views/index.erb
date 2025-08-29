@@ -10,7 +10,6 @@
       <option value="exposition" <%= 'selected' if @search_category == 'exposition' %>>Экспозиции</option>
       <option value="exhibit" <%= 'selected' if @search_category == 'exhibit' %>>Экспонаты</option>
       <option value="author" <%= 'selected' if @search_category == 'author' %>>Авторы</option>
-      <option value="hall" <%= 'selected' if @search_category == 'hall' %>>Залы</option>
     </select>
     
     <button type="submit" style="padding: 12px 20px;">🔍 Искать</button>
@@ -33,27 +32,43 @@
               🏺 <%= result[1] %>
             <% elsif result[2] == 'author' %>
               👨‍🎨 <%= result[1] %>
-            <% elsif result[2] == 'hall' %>
-              🏛️ <%= result[1] %>
             <% end %>
           </h4>
-          
+
+
           <p>
-            <% if result[3] && !result[3].empty? %>
-              <% if result[2] == 'exposition' %>
-                <strong>Автор:</strong> <%= result[3] %><br>
-              <% elsif result[2] == 'exhibit' %>
-                <%= result[3][0..100] %>...<br>
-              <% end %>
+            <% if result[6] && !result[6].to_s.empty? && result[2] == 'exhibit'%>
+                <strong>Автор:</strong> <%= result[6] %>
+            <% end %>
+
+            <% if result[3] && !result[3].to_s.empty? && result[2] != 'author'%>
+              <strong>Описание:</strong> <%= result[3] %><br>
             <% end %>
             
-            <% if result[4] && !result[4].empty? %>
+            <% if result[4] && !result[4].to_s.empty? && result[2] != 'author' %>
               <strong>Зал:</strong> <%= result[4] %>
             <% end %>
             
-            <% if result[5] && !result[5].empty? %>
+            <% if result[5] && !result[5].to_s.empty? && result[2] != 'author'%>
               <strong>Этаж:</strong> <%= result[5] %>
             <% end %>
+            
+            <% if result[4] && !result[4].to_s.empty? && result[2] == 'author' %>
+                <strong>Автор:</strong> <%= result[4] %><br>
+            <% end %>
+
+            <% if result[5] && !result[5].to_s.empty? && result[2] == 'author' %>
+                <strong>Описание:</strong> <%= result[5] %><br>
+            <% end %>
+            
+            <% if result[6] && !result[6].to_s.empty? && result[2] == 'author' %>
+                <strong>Зал:</strong> <%= result[6] %>
+            <% end %>
+            
+            <% if result[7] && !result[7].to_s.empty? && result[2] == 'author' %>
+                <strong>Этаж:</strong> <%= result[7] %>
+            <% end %>
+
           </p>
           
           <% if result[2] == 'exposition' %>

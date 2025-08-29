@@ -121,8 +121,6 @@ def get_db
   SQLite3::Database.new 'museum.db'
 end
 
-
-
 # Поиск по музею
 def search_museum(query, category)
   db = get_db
@@ -134,20 +132,17 @@ def search_museum(query, category)
   when 'all'
     results += search_expositions(db, query)
     results += search_exhibits(db, query)
-    results += search_halls(db, query)
     results += search_authors(db, query)
     
-  when 'expositions'
+  when 'exposition'
     results = search_expositions(db, query)
     
-  when 'exhibits'
+  when 'exhibit'
     results = search_exhibits(db, query)
   
-  when 'authors'
+  when 'author'
     results = search_authors(db, query)
-    
-  when 'halls'
-    results = search_halls(db, query)
+
   end
   
   results.uniq #избегание повторов
@@ -155,7 +150,7 @@ end
 
 def search_expositions(db, query)
   db.execute <<-SQL, [query]
-    SELECT e.id_exposition, e.name_exposition as title, 'exposition' as type, h.number_hall as hall, f.number_floor as floor
+    SELECT e.id_exposition, e.name_exposition as title, 'exposition' as type, e.descreption, h.number_hall as hall, f.number_floor as floor
     FROM exposition e
     LEFT JOIN hall h ON e.id_hall = h.id_hall
     LEFT JOIN floor_museum f ON h.number_floor = f.number_floor
@@ -165,30 +160,26 @@ end
 
 def search_exhibits(db, query)
   db.execute <<-SQL, [query, query]
-    SELECT e.id_exhibit, e.name_exhibit as title, 'exhibit' as type, e.description, h.number_hall as hall, f.number_floor as floor
+    SELECT e.id_exhibit, e.name_exhibit as title, 'exhibit' as type, e.description, h.number_hall as hall, f.number_floor as floor, CONCAT(second_name , ' ' , first_name , ' ' , surname) as author_title
     FROM exhibit e
     LEFT JOIN hall h ON e.id_hall = h.id_hall
     LEFT JOIN floor_museum f ON h.number_floor = f.number_floor
+    LEFT JOIN author a ON a.id_author = e.id_author
     WHERE LOWER(e.name_exhibit) LIKE ? OR LOWER(e.description) LIKE ?
   SQL
 end
 
 def search_authors(db, query)
-  db.execute <<-SQL, [query]
-    SELECT id_author, second_name + ' ' + first_name + ' ' + surname as title, 'author' as type, '' as hall, '' as floor
-    FROM author 
-    WHERE LOWER(title) LIKE ?
+  db.execute <<-SQL, [query, query]
+    SELECT a.id_author, e.name_exhibit as title, 'author' as type, a.second_name, CONCAT(a.second_name , ' ' , a.first_name , ' ' , a.surname) as author_title, e.description, h.number_hall as hall, f.number_floor as floor
+    FROM author a
+    LEFT JOIN exhibit e ON e.id_author = a.id_author
+    LEFT JOIN hall h ON e.id_hall = h.id_hall
+    LEFT JOIN floor_museum f ON h.number_floor = f.number_floor
+    WHERE LOWER(second_name) LIKE ? OR LOWER(title) LIKE ?
   SQL
 end
 
-def search_halls(db, query)
-  db.execute <<-SQL, [query, query]
-    SELECT h.id_hall, h.name_hall as title, 'hall' as type, f.name_floor as floor, '' as author
-    FROM hall h
-    LEFT JOIN floor_museum f ON h.number_floor = f.number_floor
-    WHERE LOWER(h.name_hall) LIKE ? OR LOWER(f.name_floor) LIKE ?
-  SQL
-end
 
 #Страница деталей экспозиции
 get '/exposition/:id' do
