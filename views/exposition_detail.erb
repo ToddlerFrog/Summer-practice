@@ -1,6 +1,6 @@
 <% if @success %>
   <div class="success">
-    ✅ Экспозиция успешно создана!
+    ✅ Exposition succsessfully created!
   </div>
 <% end %>
 
@@ -8,15 +8,15 @@
   <div class="exposition-header">
     <h2><%= @exposition[1] %></h2>
     <p class="exposition-meta">
-      📍 <%= @exposition[8] %> | 🏛️ <%= @exposition[9] %> |
-      📅 <%= @exposition[6] %> - <%= @exposition[7] %> |
-      Статус: <%= @exposition[10] %>
+      Hall <%= @exposition[0] %> | 🏛️ <%= @exposition[9] %> |
+      📅 <%= @exposition[4] %> - <%= @exposition[7] %>
+      
     </p>
   </div>
 
   <div class="exposition-content">
     <div class="descreption">
-      <h3>Описание</h3>
+      <h3>Description</h3>
       <p><%= @exposition[2] %></p>
     </div>
 

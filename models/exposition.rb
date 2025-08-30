@@ -13,27 +13,18 @@ class Exposition
     @id_exhibit = attributes[:id_exhibit] || []
   end
 
-# exposition = Exposition.new(
-#     name_exposition: params[:name_exposition],
-#     descreption: params[:descreption],
-#     id_hall: params[:id_hall],
-#     start_date: start_date,
-#     end_date: end_date,
-#     id_exhibit: params[:exhibit] || []
-#   )
-
   def valid?
     errors.empty?
   end
 
   def errors
     errors = []
-    errors << "Название обязательно" if @name_exposition.to_s.strip.empty?
-    errors << "Описание обязательно" if @descreption.to_s.strip.empty?
-    errors << "Зал должен быть выбран" if @id_hall.nil?
-    errors << "Дата начала должна быть указана" if @start_date.to_s.strip.empty?
-    errors << "Дата окончания должна быть указана" if @end_date.to_s.strip.empty?
-    errors << "Дата окончания должна быть после даты начала" if valid_dates? && @end_date < @start_date
+    errors << "Require name" if @name_exposition.to_s.strip.empty?
+    errors << "Require description" if @descreption.to_s.strip.empty?
+    errors << "Hall must be chosen" if @id_hall.nil?
+    errors << "Start date must be typed" if @start_date.to_s.strip.empty?
+    errors << "End date must be typed" if @end_date.to_s.strip.empty?
+    errors << "End date must be after the start date" if valid_dates? && @end_date < @start_date
     errors
   end
 
@@ -76,7 +67,7 @@ class Exposition
     
     true
   rescue SQLite3::Exception => e
-    puts "Ошибка сохранения: #{e.message}"
+    puts "Error of saving: #{e.message}"
     false
   end
 

@@ -276,3 +276,45 @@ get '/exposition/:id_exposition' do
   @success = params[:success]
   erb :exposition_detail
 end
+
+
+
+# Страница формы удаления
+get '/delete_exposition' do
+  erb :delete_exposition
+end
+
+# Обработка удаления
+post '/delete_exposition' do
+  db = get_db
+  
+  # Ищем экспозицию по ID и названию (для безопасности)
+  exposition = db.execute(
+    "SELECT * FROM exposition WHERE id_exposition = ? AND name_exposition = ?", 
+    [params[:id_exposition], params[:name_exposition]]
+  ).first
+
+  if exposition
+    begin
+      # Удаляем связанные данные
+      db.execute("DELETE FROM status_exposition WHERE id_exposition = ?", [params[:id_exposition]])
+      db.execute("DELETE FROM exhibit_in_exposition WHERE id_exposition = ?", [params[:id_exposition]])
+      db.execute("DELETE FROM photo_exposition WHERE id_exposition = ?", [params[:id_exposition]])
+      
+      # Удаляем саму экспозицию
+      db.execute("DELETE FROM exposition WHERE id_exposition = ?", [params[:id_exposition]])
+      
+      @message = "✅ Exposition '#{params[:name_exposition]}' successfully deleted!"
+      @success = true
+      
+    rescue SQLite3::Exception => e
+      @error = "❌ Error: #{e.message}"
+      @success = false
+    end
+  else
+    @error = "❌ Exposition not founded. Check ID or name again."
+    @success = false
+  end
+
+  erb :delete_exposition
+end

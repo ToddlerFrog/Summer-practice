@@ -1,0 +1,75 @@
+<h2>Delete exposition</h2>
+
+<% if @error %>
+  <div class="alert alert-error">
+    <%= @error %>
+  </div>
+<% end %>
+
+<% if @message %>
+  <div class="alert alert-success">
+    <%= @message %>
+  </div>
+<% end %>
+
+<form method="post" action="/delete_exposition" class="delete-form">
+  <div class="form-group">
+    <label for="id_exposition">Exposition ID:*</label>
+    <input type="number" id="id_exposition" name="id_exposition" required 
+           value="<%= params[:id_exposition] %>" placeholder="Type ID">
+  </div>
+
+  <div class="form-group">
+    <label for="name_exposition">Name of exposition:*</label>
+    <input type="text" id="name_exposition" name="name_exposition" required 
+           value="<%= params[:name_exposition] %>" placeholder="Type correct name of exposition">
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-danger">Delete exposition</button>
+    <a href="/" class="btn btn-secondary">← Back</a>
+  </div>
+
+  <p class="form-note">
+    ⚠️ Warning: delete cannot be interrupted! All data will be deleted.
+  </p>
+</form>
+
+<style>
+.delete-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.form-note {
+  color: #dc3545;
+  font-size: 14px;
+  border-left: 3px solid #dc3545;
+  padding-left: 10px;
+  margin-top: 20px;
+}
+
+.alert-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 20px;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #c3e6cb;
+  margin-bottom: 20px;
+}
+</style>
