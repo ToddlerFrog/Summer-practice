@@ -1,0 +1,118 @@
+<h2>🎨 Создание новой экспозиции</h2>
+
+<% if @errors && !@errors.empty? %>
+  <div class="error">
+    <strong>Ошибки:</strong>
+    <ul>
+      <% @errors.each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<form method="post" action="/exposition" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="name_exposition">Название экспозиции:*</label>
+    <input type="text" id="name_exposition" name="name_exposition" required 
+           value="<%= @params && @params['name_exposition'] %>">
+  </div>
+
+  <div class="form-group">
+    <label for="descreption">Описание:*</label>
+    <textarea id="descreption" name="descreption" rows="4" required><%= @params && @params['descreption'] %></textarea>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="id_hall">Зал:*</label>
+      <select id="id_hall" name="id_hall" required>
+        <option value="">Выберите зал</option>
+        <% @hall.each do |hall| %>
+          <option value="<%= hall[0] %>" <%= 'selected' if @params && @params['id_hall'] == hall[0].to_s %>>
+            <%= hall[1] %> (Этаж <%= hall[2] %>)
+          </option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="start_date">Дата начала:*</label>
+      <input type="date" id="start_date" name="start_date" required 
+             value="<%= @params && @params['start_date'] %>">
+    </div>
+
+    <div class="form-group">
+      <label for="end_date">Дата окончания:*</label>
+      <input type="date" id="end_date" name="end_date" required 
+             value="<%= @params && @params['end_date'] %>">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Экспонаты в экспозиции:</label>
+    <div class="exhibit-grid">
+      <% @exhibit.each do |exhibit| %>
+        <label class="checkbox-label">
+          <input type="checkbox" name="exhibit[]" value="<%= exhibit[0] %>"
+                 <%= 'checked' if @params && @params['exhibit'] && @params['exhibit'].include?(exhibit[0].to_s) %>>
+          <%= exhibit[1] %>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="photo">Фотографии экспозиции:</label>
+    <input type="file" id="photo" name="photo[]" multiple accept="image/*">
+  </div>
+
+  <button type="submit" class="btn">✅ Создать экспозицию</button>
+  <a href="/" class="btn btn-secondary">← Назад</a>
+</form>
+
+<style>
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.exhibit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  background: #f8f9fa;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.checkbox-label:hover {
+  background: #e9ecef;
+}
+
+.checkbox-label input {
+  margin-right: 8px;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-family: inherit;
+  resize: vertical;
+}
+</style>

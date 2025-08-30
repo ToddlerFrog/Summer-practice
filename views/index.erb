@@ -1,26 +1,30 @@
-<h2>🔍 Поиск по музейному комплексу</h2>
+<a href="/login"><button class="button_1">Login</button></a>
+<a href="/register"><button class="button_1">Register</button></a>
+<a href="/exposition/new"><button class="button_1">Creating</button></a>
+
+<h2>🔍 Searh on museum</h2>
 
 <form method="get" action="/" class="search-form">
   <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-    <input type="text" name="query" placeholder="Введите название экспозиции, автора или экспоната..." 
+    <input type="text" name="query" placeholder="Type here name of exposition, author or exhibit..." 
            value="<%= @search_query %>" style="flex: 1; padding: 12px;">
     
     <select name="category" style="padding: 12px;">
-      <option value="all" <%= 'selected' if @search_category == 'all' %>>Везде</option>
-      <option value="exposition" <%= 'selected' if @search_category == 'exposition' %>>Экспозиции</option>
-      <option value="exhibit" <%= 'selected' if @search_category == 'exhibit' %>>Экспонаты</option>
-      <option value="author" <%= 'selected' if @search_category == 'author' %>>Авторы</option>
+      <option value="all" <%= 'selected' if @search_category == 'all' %>>All</option>
+      <option value="exposition" <%= 'selected' if @search_category == 'exposition' %>>Expositions</option>
+      <option value="exhibit" <%= 'selected' if @search_category == 'exhibit' %>>Exhibits</option>
+      <option value="author" <%= 'selected' if @search_category == 'author' %>>Authors</option>
     </select>
     
-    <button type="submit" style="padding: 12px 20px;">🔍 Искать</button>
+    <input type="submit" value='🔍 Searh...'>
   </div>
 </form>
 
 <% if @search_query && !@search_query.empty? %>
-  <h3>Результаты поиска: <%= @results.size %> найдено</h3>
+  <h3>Results: <%= @results.size %> finded</h3>
   
   <% if @results.empty? %>
-    <p>Ничего не найдено. Попробуйте изменить запрос.</p>
+    <p>Nothing happened. Try again.</p>
   <% else %>
     <div class="search-results">
       <% @results.each do |result| %>
@@ -38,44 +42,38 @@
 
           <p>
             <% if result[6] && !result[6].to_s.empty? && result[2] == 'exhibit'%>
-                <strong>Автор:</strong> <%= result[6] %>
+                <strong>Author:</strong> <%= result[6] %><br>
             <% end %>
 
             <% if result[3] && !result[3].to_s.empty? && result[2] != 'author'%>
-              <strong>Описание:</strong> <%= result[3] %><br>
+              <strong>Description:</strong> <%= result[3] %><br>
             <% end %>
             
             <% if result[4] && !result[4].to_s.empty? && result[2] != 'author' %>
-              <strong>Зал:</strong> <%= result[4] %>
+              <strong>Hall:</strong> <%= result[4] %>
             <% end %>
             
             <% if result[5] && !result[5].to_s.empty? && result[2] != 'author'%>
-              <strong>Этаж:</strong> <%= result[5] %>
+              <strong>Floor:</strong> <%= result[5] %>
             <% end %>
             
             <% if result[4] && !result[4].to_s.empty? && result[2] == 'author' %>
-                <strong>Автор:</strong> <%= result[4] %><br>
+                <strong>Author:</strong> <%= result[4] %><br>
             <% end %>
 
             <% if result[5] && !result[5].to_s.empty? && result[2] == 'author' %>
-                <strong>Описание:</strong> <%= result[5] %><br>
+                <strong>Description:</strong> <%= result[5] %><br>
             <% end %>
             
             <% if result[6] && !result[6].to_s.empty? && result[2] == 'author' %>
-                <strong>Зал:</strong> <%= result[6] %>
+                <strong>Hall:</strong> <%= result[6] %>
             <% end %>
             
             <% if result[7] && !result[7].to_s.empty? && result[2] == 'author' %>
-                <strong>Этаж:</strong> <%= result[7] %>
+                <strong>Floor:</strong> <%= result[7] %>
             <% end %>
-
+            
           </p>
-          
-          <% if result[2] == 'exposition' %>
-            <a href="/exposition/<%= result[0] %>">📖 Подробнее</a>
-          <% elsif result[2] == 'exhibit' %>
-            <a href="/exhibit/<%= result[0] %>">📖 Подробнее</a>
-          <% end %>
         </div>
       <% end %>
     </div>
@@ -83,43 +81,70 @@
 <% end %>
 
 <style>
-.search-form {
-  margin: 20px 0;
-}
+  .search-form {
+    margin: 20px 0;
+  }
 
-.search-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
+  .search-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
 
-.result-card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  border-left: 4px solid #3498db;
-}
+  .search-input {
+        width: 100%;
+        padding: 0.6rem 1rem; 
+        border: 1px solid #555;
+        background-color: #222;
+        color: #fff;
+        font-size: 1rem;
+        border-radius: 4px;
+    }    
+  .search-input::placeholder {
+        color: #999;
+    }
 
-.result-card h4 {
-  margin: 0 0 10px 0;
-  color: #2c3e50;
-}
+  .button_1{ 
+      background-color: transparent;
+      color: #000000;
+      border: 2px solid #000000;
+      padding: 10px 20px; 
+      border-radius: 4px; 
+      cursor: pointer; 
+      transition: all 0.3s;
+    }
+  .button_1:hover {
+    background-color: #000000;
+    color: rgb(249, 248, 219);
+    }
 
-.result-card p {
-  margin: 0 0 15px 0;
-  color: #666;
-  line-height: 1.5;
-}
+  .result-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-left: 4px solid #3498db;
+  }
 
-.result-card a {
-  color: #3498db;
-  text-decoration: none;
-  font-weight: bold;
-}
+  .result-card h4 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+  }
 
-.result-card a:hover {
-  text-decoration: underline;
-}
+  .result-card p {
+    margin: 0 0 15px 0;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .result-card a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .result-card a:hover {
+    text-decoration: underline;
+  }
 </style>

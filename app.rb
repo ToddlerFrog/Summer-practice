@@ -3,6 +3,7 @@ require 'sinatra/reloader' if development? # автоматическая пер
 require 'sqlite3' # бд
 require 'bcrypt' # хэш
 require 'date'
+require_relative './models/exposition'
 
 # Подключение к бд
 DB = SQLite3::Database.new('museum.db')
@@ -111,11 +112,7 @@ get '/logout' do
   redirect '/'
 end
 
-
-
-
-
-
+# поиск по фильтру(м)
 
 def get_db
   SQLite3::Database.new 'museum.db'
@@ -181,37 +178,6 @@ def search_authors(db, query)
 end
 
 
-#Страница деталей экспозиции
-get '/exposition/:id' do
-  db = get_db
-  @exposition = db.execute <<-SQL, [params[:id]]
-    SELECT e.*, h.name as hall_name, f.name as floor_name
-    FROM exposition e
-    LEFT JOIN hall h ON e.id_hall = h.id_hall
-    LEFT JOIN floor_museum f ON h.number_floor = f.number_floor
-    WHERE e.id_exposition = ?
-  SQL
-  
-  @photos = db.execute("SELECT photo FROM photo_exposition WHERE id_exposition = ?", [params[:id]])
-  
-  erb :exposition_detail
-end
-
-# Страница деталей экспоната
-get '/exhibit/:id' do
-  db = get_db
-  @exhibit = db.execute <<-SQL, [params[:id]]
-    SELECT e.*, h.name_hall as hall_name, f.name_floor as floor_name
-    FROM exhibit e
-    LEFT JOIN hall h ON e.id_hall = h.id_hall
-    LEFT JOIN floor f ON h.number_floor = f.number_floor
-    WHERE e.id_exhibit = ?
-  SQL
-  
-  @photos = db.execute("SELECT photo FROM photo_exhibit WHERE id_exhibit = ?", [params[:id]])
-  
-  erb :exhibit_detail
-end
 
 # API для быстрого поиска (AJAX)
 get '/api/search' do
@@ -225,4 +191,88 @@ get '/api/search' do
     results = search_museum(query, category)
     { results: results }.to_json
   end
+end
+
+# добавление экспозиции в бд
+
+get '/exposition/new' do
+  db = get_db
+  @hall = db.execute("SELECT * FROM hall ORDER BY number_hall")
+  @floor = db.execute("SELECT * FROM floor_museum ORDER BY number_floor")
+  @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
+  
+  erb :new_exposition
+end
+
+# Обработка создания экспозиции
+post '/exposition' do
+  # # Преобразуем даты
+  # begin
+  #   start_date = Date.parse(params[:start_date]) if params[:start_date]
+  #   end_date = Date.parse(params[:end_date]) if params[:end_date]
+  # rescue ArgumentError
+  #   # Обработка неверного формата даты
+  # end
+
+  start_date_ymd = params[:start_date].split("-").reverse.join("-")
+  end_date_ymd = params[:end_date].split("-").reverse.join("-")
+
+  exposition = Exposition.new(
+    name_exposition: params[:name_exposition],
+    descreption: params[:descreption],
+    id_hall: params[:id_hall],
+    number_floor: params[:number_floor],
+    start_date: start_date_ymd,
+    end_date:  end_date_ymd,
+    photos: params[:photo] || [],
+    id_exhibit: params[:exhibit] || []
+  )
+
+  db = get_db
+  db.execute(
+    "INSERT INTO exposition (name_exposition, descreption, id_hall) VALUES (?, ?, ?)",
+    [exposition.name_exposition, exposition.descreption, exposition.id_hall]
+    )
+  new_id = db.last_insert_row_id
+
+  if exposition.valid? && exposition.save
+    redirect "/exposition/#{new_id}?success=1"
+  else
+    @errors = exposition.errors
+    @params = params
+    
+    # Загружаем данные для формы
+    db = get_db
+    @hall = db.execute("SELECT * FROM hall ORDER BY number_hall")
+    @floor = db.execute("SELECT * FROM floor_museum ORDER BY number_florr")
+    @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
+    
+    erb :new_exposition
+  end
+end
+
+# Страница просмотра экспозиции
+get '/exposition/:id_exposition' do
+
+  db = get_db
+  @exposition = db.execute(<<-SQL, [params[:id_exposition]]).first
+    SELECT e.*, es.start_date, es.end_date, es.id_status,
+           h.number_hall as number_hall, f.number_floor as number_floor
+    FROM exposition e
+    LEFT JOIN status_exposition es ON e.id_exposition = es.id_exposition
+    LEFT JOIN hall h ON e.id_hall = h.id_hall
+    LEFT JOIN floor_museum f ON h.number_floor = f.number_floor
+    WHERE e.id_exposition = ?
+  SQL
+
+  @photo = db.execute("SELECT * FROM photo_exposition WHERE id_exposition = ?", [params[:id_exposition]])
+  @exhibit = db.execute(<<-SQL, [params[:id_exposition]])
+    SELECT e.* 
+    FROM exhibit e
+    JOIN exhibit_in_exposition ee ON e.id_exhibit = ee.id_exhibit
+    WHERE ee.id_exposition = ?
+  SQL
+
+  @success = params[:success]
+  erb :exposition_detail
 end
