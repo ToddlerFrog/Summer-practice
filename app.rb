@@ -318,3 +318,87 @@ post '/delete_exposition' do
 
   erb :delete_exposition
 end
+
+
+# Страница редактирования
+get '/exposition/:id_exposition/edit' do
+  db = get_db
+  @exposition = db.execute("SELECT * FROM exposition WHERE id_exposition = ?", [params[:id_exposition]]).first
+  
+  if @exposition
+    # Загружаем данные для формы
+    @hall = db.execute("SELECT * FROM hall ORDER BY id_hall")
+    @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
+    
+    # Загружаем текущие экспонаты экспозиции
+    @current_exhibit = db.execute(
+      "SELECT id_exhibit FROM exhibit_in_exposition WHERE id_exposition = ?", 
+      [params[:id_exposition]]
+    ).map { |row| row[0] }
+    
+    # Загружаем даты экспозиции
+    status_exposition = db.execute(
+      "SELECT * FROM status_exposition WHERE id_exposition = ?", 
+      [params[:id_exposition]]
+    ).first
+    
+    @start_date = status_exposition[2] if status_exposition
+    @end_date = status_exposition[3] if status_exposition
+    
+    erb :edit_exposition
+  else
+    status 404
+    "Экспозиция не найдена"
+  end
+end
+
+# Обработка обновления
+post '/exposition/:id_exposition/update' do
+  db = get_db
+  
+  begin
+    # Обновляем основную информацию
+    db.execute(
+      "UPDATE exposition SET name_exposition = ?, descreption = ?, id_hall = ? WHERE id_exposition = ?",
+      [params[:name_exposition], params[:descreption], params[:id_hall], params[:id_exposition]]
+    )
+    
+    # Обновляем даты
+    db.execute(
+      "UPDATE status_exposition SET start_date = ?, end_date = ? WHERE id_exposition = ?",
+      [params[:start_date], params[:end_date], params[:id_exposition]]
+    )
+    
+    # Обновляем экспонаты
+    db.execute("DELETE FROM exhibit_in_exposition WHERE id_exposition = ?", [params[:id_exposition]])
+    
+    if params[:exhibit]
+      params[:exhibit].each do |id_exhibit|
+        db.execute(
+          "INSERT INTO exhibit_in_exposition (id_exposition, id_exhibit) VALUES (?, ?)",
+          [params[:id_exposition], id_exhibit]
+        )
+      end
+    end
+    
+    redirect "/exposition/#{params[:id_exposition]}?success=Экспозиция успешно обновлена"
+    
+  rescue SQLite3::Exception => e
+    puts "Ошибка обновления: #{e.message}"
+    @error = "Ошибка при обновлении: #{e.message}"
+    
+    # Возвращаем к форме с ошибкой
+    @exposition = [params[:id_exposition], params[:name_exposition], params[:descreption], params[:id_hall]]
+    @hall = db.execute("SELECT * FROM hall ORDER BY name_hall")
+    @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
+    @current_exhibit = params[:exhibit] || []
+    
+    erb :edit_exposition
+  end
+end
+
+get '/exposition' do
+  db = get_db
+  @exposition = db.execute("SELECT * FROM exposition ORDER BY id_exposition DESC")
+  erb :list_exposition
+end

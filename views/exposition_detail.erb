@@ -22,12 +22,12 @@
 
     <% if !@exhibit.empty? %>
       <div class="exhibit-section">
-        <h3>Экспонаты <%= @exhibit.size %></h3>
+        <h3>Expositions: <%= @exhibit.size %></h3>
         <div class="exhibit-grid">
           <% @exhibit.each do |exhibit| %>
             <div class="exhibit-card">
               <h4><%= exhibit[1] %></h4>
-              <p><%= exhibit[2] ? exhibit[2][0..100] + '...' : 'Нет описания' %></p>
+              <p><%= exhibit[2] ? exhibit[2][0..100] + '...' : 'No description' %></p>
             </div>
           <% end %>
         </div>
@@ -36,22 +36,22 @@
 
     <% if !@photo.empty? %>
       <div class="photo-section">
-        <h3>Фотографии</h3>
+        <h3>Photos</h3>
         <div class="photo-grid">
           <% @photo.each do |photo| %>
-            <img src="<%= photo[2] %>" alt="Фото экспозиции" class="exposition-photo">
+            <img src="<%= photo[2] %>" alt="Photo of exposition" class="exposition-photo">
           <% end %>
         </div>
       </div>
     <% end %>
   </div>
 <% else %>
-  <p>Экспозиция не найдена.</p>
+  <p>Exposition not founded.</p>
 <% end %>
 
 <div style="margin-top: 30px;">
-  <a href="/exposition/new" class="btn">➕ Создать еще экспозицию</a>
-  <a href="/" class="btn btn-secondary">🏠 На главную</a>
+  <a href="/exposition/new" class="btn">➕ Create new exposition</a>
+  <a href="/" class="btn btn-secondary">🏠 Home</a>
 </div>
 
 <style>

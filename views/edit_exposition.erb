@@ -1,0 +1,87 @@
+<h2>✏️ Edit exposition</h2>
+
+<% if @error %>
+  <div class="alert alert-error">
+    <%= @error %>
+  </div>
+<% end %>
+
+<form method="post" action="/exposition/<%= @exposition[0] %>/update">
+  <div class="form-group">
+    <label for="title">Name of exposition:*</label>
+    <input type="text" id="name_exposition" name="name_exposition" required value="<%= @exposition[1] %>">
+  </div>
+
+  <div class="form-group">
+    <label for="descreption">Description:*</label>
+    <textarea id="descreption" name="descreption" required rows="4"><%= @exposition[2] %></textarea>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="id_hall">Hall:*</label>
+      <select id="id_hall" name="id_hall" required>
+        <option value="">Choose the Hall</option>
+        <% @hall.each do |hall| %>
+          <option value="<%= hall[0] %>" <%= 'selected' if hall[0] == @exposition[3] %>>
+            <%= hall[1] %> (<%= hall[2] %>)
+          </option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="start_date">Start date:</label>
+      <input type="date" id="start_date" name="start_date" value="<%= @start_date %>">
+    </div>
+
+    <div class="form-group">
+      <label for="end_date">End date:</label>
+      <input type="date" id="end_date" name="end_date" value="<%= @end_date %>">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Exhibits in exposition:</label>
+    <div class="exhibit-grid">
+      <% @exhibit.each do |exhibit| %>
+        <label class="checkbox-label">
+          <input type="checkbox" name="exhibit[]" value="<%= exhibit[0] %>"
+                 <%= 'checked' if @current_exhibit.include?(exhibit[0]) %>>
+          <%= exhibit[1] %>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">💾 Save</button>
+    <a href="/exposition/<%= @exposition[0] %>" class="btn btn-secondary">❌ Cancel</a>
+    <a href="/delete_exposition?id=<%= @exposition[0] %>&name_exposition=<%= @exposition[1] %>" class="btn btn-danger">Delete</a>
+  </div>
+</form>
+
+<style>
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: #28a745;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #218838;
+}
+</style>

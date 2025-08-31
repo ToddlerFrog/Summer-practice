@@ -222,8 +222,8 @@ create table if not exists status_exposition
 -- CREATE INDEX idx_change_log_floor_museum ON change_log(id_exposition);
 -- CREATE INDEX idx_change_log_administrator ON change_log(id_admin);
 -- CREATE INDEX idx_administrator_category ON administrator(id_category);
-CREATE INDEX idx_status_exposition_exposition ON status_exposition (id_exposition);
-CREATE INDEX idx_status_exposition_status ON status(id_status);
+-- CREATE INDEX idx_status_exposition_exposition ON status_exposition (id_exposition);
+-- CREATE INDEX idx_status_exposition_status ON status(id_status);
 
 
 

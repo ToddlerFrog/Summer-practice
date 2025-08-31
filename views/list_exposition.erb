@@ -1,0 +1,73 @@
+<h2>📋 All expositions</h2>
+
+<table class="exposition-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Hall</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @exposition.each do |exposition| %>
+      <tr>
+        <td><%= exposition[0] %></td>
+        <td><strong><%= exposition[1] %></strong></td>
+        <td><%= exposition[2] ? exposition[2][0..50] + '...' : '—' %></td>
+        <td>Зал №<%= exposition[3] %></td>
+        <td class="actions">
+          <a href="/exposition/<%= exposition[0] %>" class="btn btn-sm">View</a>
+          <a href="/exposition/<%= exposition[0] %>/edit" class="btn btn-sm btn-primary">Edit</a>
+          <a href="/delete_exposition?id_exposition=<%= exposition[0] %>&name_exposition=<%= exposition[1] %>" 
+             class="btn btn-sm btn-danger" 
+             onclick="return confirm('Удалить экспозицию?')">Delete</a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div style="margin-top: 20px;">
+  <a href="/exposition/new" class="btn">🎨 Create new exposition</a>
+  <a href="/" class="btn btn-secondary">🏠 Home</a>
+</div>
+
+<style>
+.exposition-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.exposition-table th, .exhibits-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.exposition-table th {
+  background: #2c3e50;
+  color: white;
+}
+
+.exposition-table tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.exposition-table tr:hover {
+  background: #e9ecef;
+}
+
+.actions {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+</style>

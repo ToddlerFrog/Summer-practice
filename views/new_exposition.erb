@@ -30,7 +30,7 @@
         <option value="">Choose the Hall</option>
         <% @hall.each do |hall| %>
           <option value="<%= hall[0] %>" <%= 'selected' if @params && @params['id_hall'] == hall[0].to_s %>>
-            <%= hall[1] %> (Floor <%= hall[2] %>)
+            <%= hall[1] %> (<%= hall[2] %>)
           </option>
         <% end %>
       </select>
