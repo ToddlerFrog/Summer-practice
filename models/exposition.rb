@@ -1,10 +1,11 @@
 require 'date'
 
+#создаем класс для создания экспозиции
 class Exposition
   attr_accessor :id_exposition, :name_exposition, :descreption, :id_hall, :number_floor, 
-                :start_date, :end_date, :photo, :id_exhibit
+                :start_date, :end_date, :photo, :id_exhibit, :id_status
 
-  def initialize(attributes = {})
+  def initialize(attributes = {}) 
     @name_exposition = attributes[:name_exposition] || ''
     @descreption = attributes[:descreption] || ''
     @id_hall = attributes[:id_hall]
@@ -13,6 +14,7 @@ class Exposition
     @end_date = attributes[:end_date]
     @photo = attributes[:photo] || []
     @id_exhibit = attributes[:id_exhibit] || []
+    @id_status = attributes[:id_status]
   end
 
   def valid?
@@ -30,25 +32,28 @@ class Exposition
     errors
   end
 
+  #функция для сохранения в бд
   def save
     return false unless valid?
     
     db = SQLite3::Database.new 'museum.db'
     
     db.transaction do
-      # Сохраняем основную информацию
+      #сохранение в экспозицию
       db.execute(
         "INSERT INTO exposition (name_exposition, descreption, id_hall) VALUES (?, ?, ?)",
         [@name_exposition, @descreption, @id_hall]
       )
       
       @id_exposition = db.last_insert_row_id
-      db.execute(
-        "INSERT INTO status_exposition (id_exposition, start_date, end_date) VALUES (?, ?, ?)",
-        [@id_exposition, @start_date, @end_date]
-      )
-      
-      # Сохраняем экспонаты
+      #сохранение в статус
+      if @id_status
+        db.execute(
+          "INSERT INTO status_exposition (id_exposition, id_status, start_date, end_date) VALUES (?, ?, ?, ?)",
+          [@id_exposition, @id_status, @start_date, @end_date]
+        )
+      end
+      #сохранение в экспонаты
       @id_exhibit.each do |id_exhibit|
         db.execute(
           "INSERT INTO exhibit_in_exposition (id_exposition, id_exhibit) VALUES (?, ?)",
@@ -56,14 +61,14 @@ class Exposition
         )
       end
       
-      # Сохраняем фото (упрощенно)
+      #сохранение в фото
       @photo.each do |photo|
         db.execute(
           "INSERT INTO photo_exposition (id_exposition, photo) VALUES (?, ?)",
           [@id_exposition, photo]
         )
       end
-    end
+  end
     
     true
   rescue SQLite3::Exception => e

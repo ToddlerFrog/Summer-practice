@@ -22,8 +22,8 @@
           <a href="/exposition/<%= exposition[0] %>/edit" class="btn btn-sm btn-primary">Edit</a>
           <a href="/delete_exposition?id_exposition=<%= exposition[0] %>&name_exposition=<%= exposition[1] %>" 
              class="btn btn-sm btn-danger" 
-             onclick="return confirm('Удалить экспозицию?')">Delete</a>
-          <a href="/exposition/<%= exposition[0] %>/status" class="btn btn-sm">Изменить статус</a>   
+             onclick="return confirm('Delete exposition?')">Delete</a>
+          <a href="/exposition/<%= exposition[0] %>/status" class="btn btn-sm">Change status</a>   
         </td>
       </tr>
     <% end %>
@@ -39,13 +39,15 @@
 .exposition-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
+  table-layout: fixed;
+  min-width: 800px;
 }
 
-.exposition-table th, .exhibits-table td {
+.exposition-table th, .exposition-table td {
   border: 1px solid #ddd;
   padding: 12px;
   text-align: left;
+  word-wrap: break-word;
 }
 
 .exposition-table th {

@@ -5,14 +5,14 @@ require 'bcrypt' # хэш
 require 'date'
 require_relative './models/exposition'
 
-# Подключение к бд
+#подключение к бд
 DB = SQLite3::Database.new('museum.db')
 DB.results_as_hash = true
 
-# Включение сессий для отслеживания входа пользователей
+#включение сессий для отслеживания входа пользователей
 enable :sessions
 
-# Главная страница с поиском 
+#главная страница с поиском 
 get '/' do
   @search_query = params[:query] || ''
   @search_category = params[:category] || 'all'
@@ -24,12 +24,12 @@ get '/' do
   erb :index
 end
 
-# Страница регистрации
+#регистрация
 get '/register' do
   erb :register
 end
 
-# Обработка формы регистрации
+#обработка регистрации
 post '/register' do
   email = params[:email].to_s.strip
   password = params[:password].to_s
@@ -38,7 +38,6 @@ post '/register' do
   surname = params[:surname].to_s.strip
   birth_date = params[:birth_date].to_s
 
-  # Валидация данных
   errors = []
 
   errors << "Email не может быть пустым" if email.empty?
@@ -47,28 +46,27 @@ post '/register' do
   errors << "Фамилия не может быть пустой" if second_name.empty?
   errors << "Дата рождения не может быть пустой" if birth_date.empty?
 
-  # Проверка формата почты
+  #проверка почты
   unless email.empty?
     email_regex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
     errors << "Неверный формат email" unless email.match?(email_regex)
   end
 
-  # Проверка отсутствия данного пользователя в бд
+  #проверка на существование аккаунта
   unless email.empty?
     existing_user = DB.execute("SELECT id_visitor FROM visitor WHERE email = ?", [email]).first
     errors << "Пользователь с таким email уже существует" if existing_user
   end
 
-  # Вывод ошибок
   if errors.any?
     session[:errors] = errors
     redirect '/register'
   end
 
-  # Хеш пароля
+  #хэш пароля
   password_hash = BCrypt::Password.create(password)
 
-  # Сохранение в бд
+  #сохранение в бд
   begin
     DB.execute(
       "INSERT INTO visitor (email, password_account, first_name, second_name, surname, date_of_birth) 
@@ -84,12 +82,12 @@ post '/register' do
   end
 end
 
-# Страница входа 
+#вход
 get '/login' do
   erb :login
 end
 
-# Обработка входа
+#обработка входа
 post '/login' do
   email = params[:email].to_s.strip
   password = params[:password].to_s
@@ -106,7 +104,7 @@ post '/login' do
   end
 end
 
-# Выход
+#выход
 get '/logout' do
   session.clear
   redirect '/'
@@ -118,7 +116,7 @@ def get_db
   SQLite3::Database.new 'museum.db'
 end
 
-# Поиск по музею
+#поиск по музею
 def search_museum(query, category)
   db = get_db
   query = "%#{query.downcase}%"
@@ -179,7 +177,7 @@ end
 
 
 
-# API для быстрого поиска (AJAX)
+#API поиск
 get '/api/search' do
   content_type :json
   query = params[:q] || ''
@@ -193,18 +191,19 @@ get '/api/search' do
   end
 end
 
-# добавление экспозиции в бд
+#добавление экспозиции в бд
 
 get '/exposition/new' do
   db = get_db
   @hall = db.execute("SELECT * FROM hall ORDER BY number_hall")
   @floor = db.execute("SELECT * FROM floor_museum ORDER BY number_floor")
   @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
-  
+  @id_status = db.execute("SELECT * FROM status ORDER BY id_status")
+
   erb :new_exposition
 end
 
-# Обработка создания экспозиции
+#обработка создания экспозиции
 post '/exposition' do
 
   start_date_ymd = params[:start_date]
@@ -218,33 +217,27 @@ post '/exposition' do
     start_date: start_date_ymd,
     end_date: end_date_ymd,
     photos: params[:photo] || [],
-    id_exhibit: params[:exhibit] || []
+    id_exhibit: params[:exhibit] || [],
+    id_status: params[:id_status]
   )
 
-  db = get_db
-  db.execute(
-    "INSERT INTO exposition (name_exposition, descreption, id_hall) VALUES (?, ?, ?)",
-    [exposition.name_exposition, exposition.descreption, exposition.id_hall]
-    )
-  new_id = db.last_insert_row_id
-
   if exposition.valid? && exposition.save
-    redirect "/exposition/#{new_id}?success=1"
+    redirect "/exposition/#{exposition.id_exposition}?success=1"
   else
     @errors = exposition.errors
     @params = params
     
-    # Загружаем данные для формы
     db = get_db
     @hall = db.execute("SELECT * FROM hall ORDER BY number_hall")
     @floor = db.execute("SELECT * FROM floor_museum ORDER BY number_floor")
     @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
+    @id_status = db.execute("SELECT * FROM status ORDER BY id_status")
     
     erb :new_exposition
   end
 end
 
-# Страница просмотра экспозиции
+#карточка экспозиции
 get '/exposition/:id_exposition' do
 
   db = get_db
@@ -284,16 +277,15 @@ end
 
 
 
-# Страница формы удаления
+#удаление
 get '/delete_exposition' do
   erb :delete_exposition
 end
 
-# Обработка удаления
+#обработка удаления
 post '/delete_exposition' do
   db = get_db
   
-  # Ищем экспозицию по ID и названию (для безопасности)
   exposition = db.execute(
     "SELECT * FROM exposition WHERE id_exposition = ? AND name_exposition = ?", 
     [params[:id_exposition], params[:name_exposition]]
@@ -301,12 +293,9 @@ post '/delete_exposition' do
 
   if exposition
     begin
-      # Удаляем связанные данные
       db.execute("DELETE FROM status_exposition WHERE id_exposition = ?", [params[:id_exposition]])
       db.execute("DELETE FROM exhibit_in_exposition WHERE id_exposition = ?", [params[:id_exposition]])
       db.execute("DELETE FROM photo_exposition WHERE id_exposition = ?", [params[:id_exposition]])
-      
-      # Удаляем саму экспозицию
       db.execute("DELETE FROM exposition WHERE id_exposition = ?", [params[:id_exposition]])
       
       @message = "✅ Exposition '#{params[:name_exposition]}' successfully deleted!"
@@ -325,23 +314,20 @@ post '/delete_exposition' do
 end
 
 
-# Страница редактирования
+#редактирование
 get '/exposition/:id_exposition/edit' do
   db = get_db
   @exposition = db.execute("SELECT * FROM exposition WHERE id_exposition = ?", [params[:id_exposition]]).first
   
   if @exposition
-    # Загружаем данные для формы
     @hall = db.execute("SELECT * FROM hall ORDER BY id_hall")
     @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
     
-    # Загружаем текущие экспонаты экспозиции
     @current_exhibit = db.execute(
       "SELECT id_exhibit FROM exhibit_in_exposition WHERE id_exposition = ?", 
       [params[:id_exposition]]
-    ).map { |row| row[0] }
+    ).map { |row| row[0] } #работа с массивами
     
-    # Загружаем даты экспозиции
     status_exposition = db.execute(
       "SELECT * FROM status_exposition WHERE id_exposition = ?", 
       [params[:id_exposition]]
@@ -353,28 +339,25 @@ get '/exposition/:id_exposition/edit' do
     erb :edit_exposition
   else
     status 404
-    "Экспозиция не найдена"
+    "Exposition not founded"
   end
 end
 
-# Обработка обновления
+#обработка редактирования
 post '/exposition/:id_exposition/update' do
   db = get_db
   
   begin
-    # Обновляем основную информацию
     db.execute(
       "UPDATE exposition SET name_exposition = ?, descreption = ?, id_hall = ? WHERE id_exposition = ?",
       [params[:name_exposition], params[:descreption], params[:id_hall], params[:id_exposition]]
     )
     
-    # Обновляем даты
     db.execute(
       "UPDATE status_exposition SET start_date = ?, end_date = ? WHERE id_exposition = ?",
       [params[:start_date], params[:end_date], params[:id_exposition]]
     )
-    
-    # Обновляем экспонаты
+  
     db.execute("DELETE FROM exhibit_in_exposition WHERE id_exposition = ?", [params[:id_exposition]])
     
     if params[:exhibit]
@@ -389,10 +372,9 @@ post '/exposition/:id_exposition/update' do
     redirect "/exposition/#{params[:id_exposition]}?success=Экспозиция успешно обновлена"
     
   rescue SQLite3::Exception => e
-    puts "Ошибка обновления: #{e.message}"
-    @error = "Ошибка при обновлении: #{e.message}"
+    puts "Updating error: #{e.message}"
+    @error = "Updating error: #{e.message}"
     
-    # Возвращаем к форме с ошибкой
     @exposition = [params[:id_exposition], params[:name_exposition], params[:descreption], params[:id_hall]]
     @hall = db.execute("SELECT * FROM hall ORDER BY name_hall")
     @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
@@ -402,6 +384,8 @@ post '/exposition/:id_exposition/update' do
   end
 end
 
+
+#изменение статуса
 get '/exposition' do
   db = get_db
   @exposition = db.execute("SELECT * FROM exposition ORDER BY id_exposition DESC")
@@ -422,15 +406,12 @@ get '/exposition' do
   erb :list_exposition
 end
 
-# Страница изменения статуса
 get '/exposition/:id_exposition/status' do
   db = get_db
   
-  # Получаем экспозицию
   @exposition = db.execute("SELECT * FROM exposition WHERE id_exposition = ?", [params[:id_exposition]]).first
   
   if @exposition
-    # Получаем текущий статус
     @current_status = db.execute(<<-SQL, [params[:id_status]]).first
       SELECT es.id_status, es.start_date, es.end_date, s.name_status
       FROM status_exposition es
@@ -438,45 +419,40 @@ get '/exposition/:id_exposition/status' do
       WHERE es.id_exposition = ?
     SQL
     
-    # Получаем все возможные статусы
     @all_status = db.execute("SELECT * FROM status ORDER BY id_status")
     
     erb :edit_status
   else
     status 404
-    "Экспозиция не найдена"
+    "Exposition not founded"
   end
 end
 
-# Обработка изменения статуса
+#обработка изменения статуса
 post '/exposition/:id_exposition/status' do
   db = get_db
   
-  # Проверяем что экспозиция существует
+  #проверка на существование
   exposition = db.execute("SELECT * FROM exposition WHERE id_exposition = ?", [params[:id_exposition]]).first
   unless exposition
     status 404
-    return "Экспозиция не найдена"
+    return "Exposition not founded"
   end
   
-  # Проверяем что статус существует
   status_exists = db.execute("SELECT COUNT(*) FROM status WHERE id_status = ?", [params[:id_status]]).first[0] > 0
   unless status_exists
-    @error = "Неверный статус"
-    # Возвращаем к форме
+    @error = "False status"
     @exposition = exposition
     @all_status = db.execute("SELECT * FROM status ORDER BY id_status")
     return erb :edit_status
   end
   existing_status = db.execute("SELECT COUNT(*) FROM status_exposition WHERE id_exposition = ?", [params[:id_exposition]]).first[0] > 0
   if existing_status
-      # ОБНОВЛЯЕМ существующую запись
       db.execute(
         "UPDATE status_exposition SET id_status = ?, start_date = ?, end_date = ? WHERE id_exposition = ?",
         [params[:id_status], params[:start_date], params[:end_date], params[:id_exposition]]
       )
   else
-    # СОЗДАЕМ новую запись
     db.execute(
       "INSERT INTO status_exposition (id_exposition, id_status, start_date, end_date) VALUES (?, ?, ?, ?)",
       [params[:id_exposition], params[:id_status], params[:start_date], params[:end_date]]

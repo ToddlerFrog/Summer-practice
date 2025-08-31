@@ -36,17 +36,27 @@
       </select>
     </div>
 
-    <div class="form-group">
-      <label for="start_date">Start date:*</label>
-      <input type="date" id="start_date" name="start_date" required 
-             value="<%= @params && @params['start_date'] %>">
-    </div>
 
-    <div class="form-group">
-      <label for="end_date">End date:*</label>
-      <input type="date" id="end_date" name="end_date" required 
-             value="<%= @params && @params['end_date'] %>">
-    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="id_status">Status:</label>
+    <select id="id_status" name="id_status">
+      <option value="">Choose status</option>
+      <% @id_status.each do |status| %>
+        <option value="<%= status[0] %>"><%= status[1] %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="status_start_date">Start date:</label>
+    <input type="date" id="status_start_date" name="start_date" value="<%= Date.today.to_s %>">
+  </div>
+
+  <div class="form-group">
+    <label for="status_end_date">End date:</label>
+    <input type="date" id="status_end_date" name="end_date">
   </div>
 
   <div class="form-group">

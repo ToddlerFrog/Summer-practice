@@ -198,7 +198,7 @@ create table if not exists status_exposition
  id_status integer,
  start_date date, 
  end_date date,
- primary key (id_exposition, id_status, start_date)
+ primary key (id_exposition, id_status)
  FOREIGN KEY (id_exposition) 
     REFERENCES exposition(id_exposition)
     ON DELETE CASCADE
