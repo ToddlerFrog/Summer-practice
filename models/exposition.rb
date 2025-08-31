@@ -1,3 +1,5 @@
+require 'date'
+
 class Exposition
   attr_accessor :id_exposition, :name_exposition, :descreption, :id_hall, :number_floor, 
                 :start_date, :end_date, :photo, :id_exhibit
@@ -41,8 +43,6 @@ class Exposition
       )
       
       @id_exposition = db.last_insert_row_id
-      
-      # Сохраняем даты
       db.execute(
         "INSERT INTO status_exposition (id_exposition, start_date, end_date) VALUES (?, ?, ?)",
         [@id_exposition, @start_date, @end_date]

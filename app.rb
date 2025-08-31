@@ -206,16 +206,9 @@ end
 
 # Обработка создания экспозиции
 post '/exposition' do
-  # # Преобразуем даты
-  # begin
-  #   start_date = Date.parse(params[:start_date]) if params[:start_date]
-  #   end_date = Date.parse(params[:end_date]) if params[:end_date]
-  # rescue ArgumentError
-  #   # Обработка неверного формата даты
-  # end
 
-  start_date_ymd = params[:start_date].split("-").reverse.join("-")
-  end_date_ymd = params[:end_date].split("-").reverse.join("-")
+  start_date_ymd = params[:start_date]
+  end_date_ymd = params[:end_date]
 
   exposition = Exposition.new(
     name_exposition: params[:name_exposition],
@@ -223,7 +216,7 @@ post '/exposition' do
     id_hall: params[:id_hall],
     number_floor: params[:number_floor],
     start_date: start_date_ymd,
-    end_date:  end_date_ymd,
+    end_date: end_date_ymd,
     photos: params[:photo] || [],
     id_exhibit: params[:exhibit] || []
   )
@@ -244,7 +237,7 @@ post '/exposition' do
     # Загружаем данные для формы
     db = get_db
     @hall = db.execute("SELECT * FROM hall ORDER BY number_hall")
-    @floor = db.execute("SELECT * FROM floor_museum ORDER BY number_florr")
+    @floor = db.execute("SELECT * FROM floor_museum ORDER BY number_floor")
     @exhibit = db.execute("SELECT * FROM exhibit ORDER BY name_exhibit")
     
     erb :new_exposition
@@ -255,9 +248,21 @@ end
 get '/exposition/:id_exposition' do
 
   db = get_db
+
+
+  @exposition = db.execute("SELECT * FROM exposition WHERE id_exposition = ?", [params[:id_exposition]]).first
+  if @exposition
+    @current_status = db.execute(<<-SQL, [params[:id_status]]).first
+      SELECT s.name_status, es.start_date, es.end_date
+      FROM status_exposition es
+      LEFT JOIN status s ON es.id_status = s.id_status
+      WHERE es.id_exposition = ?
+    SQL
+  end
+
   @exposition = db.execute(<<-SQL, [params[:id_exposition]]).first
     SELECT e.*, es.start_date, es.end_date, es.id_status,
-           h.number_hall as number_hall, f.number_floor as number_floor
+          h.number_hall as number_hall, f.number_floor as number_floor
     FROM exposition e
     LEFT JOIN status_exposition es ON e.id_exposition = es.id_exposition
     LEFT JOIN hall h ON e.id_hall = h.id_hall
@@ -400,5 +405,82 @@ end
 get '/exposition' do
   db = get_db
   @exposition = db.execute("SELECT * FROM exposition ORDER BY id_exposition DESC")
+
+  @status = {}
+  @exposition.each do |exposition|
+    status = db.execute(<<-SQL, [exposition[0]]).first
+      SELECT s.name_status, es.start_date, es.end_date
+      FROM status_exposition es
+      LEFT JOIN status s ON es.id_status = s.id_status
+      WHERE es.id_exposition = ?
+    SQL
+    @status[exposition[0]] = status
+  end
+  
+  @all_status = db.execute("SELECT * FROM status ORDER BY id_status")
+
   erb :list_exposition
 end
+
+# Страница изменения статуса
+get '/exposition/:id_exposition/status' do
+  db = get_db
+  
+  # Получаем экспозицию
+  @exposition = db.execute("SELECT * FROM exposition WHERE id_exposition = ?", [params[:id_exposition]]).first
+  
+  if @exposition
+    # Получаем текущий статус
+    @current_status = db.execute(<<-SQL, [params[:id_status]]).first
+      SELECT es.id_status, es.start_date, es.end_date, s.name_status
+      FROM status_exposition es
+      LEFT JOIN status s ON es.id_status = s.id_status
+      WHERE es.id_exposition = ?
+    SQL
+    
+    # Получаем все возможные статусы
+    @all_status = db.execute("SELECT * FROM status ORDER BY id_status")
+    
+    erb :edit_status
+  else
+    status 404
+    "Экспозиция не найдена"
+  end
+end
+
+# Обработка изменения статуса
+post '/exposition/:id_exposition/status' do
+  db = get_db
+  
+  # Проверяем что экспозиция существует
+  exposition = db.execute("SELECT * FROM exposition WHERE id_exposition = ?", [params[:id_exposition]]).first
+  unless exposition
+    status 404
+    return "Экспозиция не найдена"
+  end
+  
+  # Проверяем что статус существует
+  status_exists = db.execute("SELECT COUNT(*) FROM status WHERE id_status = ?", [params[:id_status]]).first[0] > 0
+  unless status_exists
+    @error = "Неверный статус"
+    # Возвращаем к форме
+    @exposition = exposition
+    @all_status = db.execute("SELECT * FROM status ORDER BY id_status")
+    return erb :edit_status
+  end
+  existing_status = db.execute("SELECT COUNT(*) FROM status_exposition WHERE id_exposition = ?", [params[:id_exposition]]).first[0] > 0
+  if existing_status
+      # ОБНОВЛЯЕМ существующую запись
+      db.execute(
+        "UPDATE status_exposition SET id_status = ?, start_date = ?, end_date = ? WHERE id_exposition = ?",
+        [params[:id_status], params[:start_date], params[:end_date], params[:id_exposition]]
+      )
+  else
+    # СОЗДАЕМ новую запись
+    db.execute(
+      "INSERT INTO status_exposition (id_exposition, id_status, start_date, end_date) VALUES (?, ?, ?, ?)",
+      [params[:id_exposition], params[:id_status], params[:start_date], params[:end_date]]
+    )
+  end
+  redirect "/exposition/#{params[:id_exposition]}?message=Статус успешно обновлен"
+end 

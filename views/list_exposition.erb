@@ -16,13 +16,14 @@
         <td><%= exposition[0] %></td>
         <td><strong><%= exposition[1] %></strong></td>
         <td><%= exposition[2] ? exposition[2][0..50] + '...' : '—' %></td>
-        <td>Зал №<%= exposition[3] %></td>
+        <td>Hall №<%= exposition[3] %></td>
         <td class="actions">
           <a href="/exposition/<%= exposition[0] %>" class="btn btn-sm">View</a>
           <a href="/exposition/<%= exposition[0] %>/edit" class="btn btn-sm btn-primary">Edit</a>
           <a href="/delete_exposition?id_exposition=<%= exposition[0] %>&name_exposition=<%= exposition[1] %>" 
              class="btn btn-sm btn-danger" 
              onclick="return confirm('Удалить экспозицию?')">Delete</a>
+          <a href="/exposition/<%= exposition[0] %>/status" class="btn btn-sm">Изменить статус</a>   
         </td>
       </tr>
     <% end %>
@@ -70,4 +71,5 @@
   padding: 5px 10px;
   font-size: 12px;
 }
+
 </style>

@@ -198,7 +198,7 @@ create table if not exists status_exposition
  id_status integer,
  start_date date, 
  end_date date,
- primary key (id_exposition, id_status)
+ primary key (id_exposition, id_status, start_date)
  FOREIGN KEY (id_exposition) 
     REFERENCES exposition(id_exposition)
     ON DELETE CASCADE
@@ -208,6 +208,8 @@ create table if not exists status_exposition
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
+-- DROP TABLE status_exposition;
 
 -- CREATE INDEX idx_ticket_visitor ON ticket(id_visitor);
 -- CREATE INDEX idx_ticket_benefits ON ticket(id_benefits);
@@ -239,4 +241,6 @@ create table if not exists status_exposition
 -- ("Morning in the pine forest", "This painting by Ivan Ivanovich Shishkin was created in 1889. It is one of the most popular works by the artist and one of the most famous landscapes in the history of Russian art.", 2, 2);
 -- INSERT INTO photo_exhibit (id_exhibit, id_photo, photo) VALUES (1, 1, "images/car7.jpg"), (2, 2, "images/p3.jpg");
 -- INSERT INTO photo_exposition (id_exposition, id_photo, photo) VALUES (1, 1, "images/Cand.jpg"), (2, 2, "images/expos.jpg");
+-- INSERT INTO status (name_status) VALUES ("On exposition"), ("On restauration"), ("In archive"), ("On outer exposition");
+-- INSERT INTO status_exposition (id_exposition, id_status, start_date, end_date) VALUES (31, 3, '2021-02-21', '2022-02-21');
 
