@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expositions</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+body {  
+    background-color: rgb(249, 248, 219);  
+}  
+.card {
+    background-color: rgb(249, 248, 219);
+}
+@media screen and (max-width: 1200px) {
+    .header-container {
+        gap: 1.5rem;
+    }
+    .logo-section {
+        min-width: 200px;
+    }        
+    .logo-abbr {
+        font-size: 2.5rem;
+    }        
+    .logo-line {
+        font-size: 1.1rem;
+    }        
+    .buttons-container {
+        gap: 1rem;
+    }        
+    .nav-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    .banner {
+        height: 600px;
+    }  
+    .banner-text {
+        font-size: 1.6rem;
+        padding: 15px 25px;
+    }  
+    .custom-card2{
+        object-fit: cover; 
+        height: 350px;
+    }
+}
+@media screen and (max-width: 767px) {
+    .header-container {
+        gap: 1rem;
+    }
+    .logo-section {
+        min-width: auto;
+        order: 1;
+        flex: 1;
+    }        
+    .logo-abbr {
+        font-size: 2rem;
+    }
+    .logo-line {
+        font-size: 0.9rem;
+    }        
+    .search-container, .buttons-container {
+        display: none;
+    }        
+    .menu-toggle {
+        display: block;
+        order: 2;
+    }        
+    .mobile-menu.active {
+        display: block;
+        order: 4;
+    }
+    .banner-text {
+        font-size: 1rem;
+        padding: 5px 15px;
+    } 
+    .custom-card2{
+    object-fit: cover; 
+    height: 300px;
+    }
+    .banner {
+        height: 300px;
+    }    
+}
+</style>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-abbr">NMA</div>
+                <div class="logo-text">
+                    <div class="logo-line">National</div>
+                    <div class="logo-line">Museum</div>
+                    <div class="logo-line">of Art</div>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search exhibitions...">
+            </div>
+            
+           <div class="buttons-container">
+                <a href="Home.html">
+                <button class="nav-button">Home</button>
+                </a>
+                <a href="Visit.html">
+                <button class="nav-button">Visit</button>
+                </a>
+                <a href="Expositions.html">
+                <button class="nav-button">Expositions</button>
+                </a>
+            </div>
+            
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="mobile-search">
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+                 <div class="mobile-buttons">
+                    <a href="Home.html">
+                    <button class="nav-button-menu">Home</button>
+                    </a>
+                    <a href="Visit.html">
+                    <button class="nav-button-menu">Visit</button>
+                    </a>
+                    <a href="Expositions.html">
+                    <button class="nav-button-menu">Expositions</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="banner">
+        <img class="banner-img" src="images/expos.png">
+        <div class="banner-text">Expositions</div>
+    </div>
+
+    <div class="container my-4">
+    <div class="row justify-content-center">
+        <h3>Explore the beauty of our finest artworks</h3>
+        <p class="card-text flex-grow-1">Our museum's artwork page has a curated selection of our most notable pieces and collections.
+        Featuring detailed descriptions and high-quality images, it offers insights into the artistry and
+        history behind each work. Enjoy a virtual tour of our collection from the comfort of your home.</p>  <!--занял всё свободное место -->
+
+        <hr>
+
+        <h1 class="text-end">Current expositions</h1>
+        <!--1-я экспозиция -->
+        <div class="col-12 col-lg-10 mt-4">
+        <div class="card border-0 ">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-6 p-0">
+                    <a href="Candinskiy.html">
+                        <img src="images/exp1.jpg" class="custom-card2 rounded w-100">
+                    </a>
+                </div>
+                <div class="col-md-6 p-0">
+                    <div class="card-body d-flex flex-column">
+                    <h3>Kandinsky</h3>
+                    <p class="card-text flex-grow-1">Step into the vibrant, abstract universe of Wassily Kandinsky at this stunning exhibition! 
+                        Explore his revolutionary use of color, form, and emotion through iconic masterpieces that shaped modern art. From bold 
+                        geometric compositions to dreamlike improvisations, each work reveals Kandinsky’s genius and his belief in art’s spiritual power.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!--2-я экспозиция -->
+        <div class="col-12 col-lg-10 mt-4">
+        <div class="card border-0">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-6 p-0">
+                    <img src="images/exp2.jpg" class="custom-card2 rounded w-100">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body d-flex flex-column">
+                    <h3>van Gogh</h3>
+                    <p class="card-text flex-grow-1">Experience the passion and brilliance of Vincent van Gogh at this unforgettable exhibition! 
+                        Marvel at his iconic swirls of Starry Night, glowing Sunflowers, and vivid landscapes that pulse with emotion. Discover the 
+                        turbulent genius behind the brushstrokes—his dreams, struggles, and unparalleled vision that transformed art forever.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!--3-я экспозиция -->
+        <div class="col-12 col-lg-10 my-4">
+        <div class="card border-0">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-6 p-0">
+                    <img src="images/exp3.jpeg" class="custom-card2 rounded w-100">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body d-flex flex-column">
+                    <h3>Malevich</h3>
+                    <p class="card-text flex-grow-1">Dive into the bold, revolutionary art of Kazimir Malevich, the pioneer of abstract geometric forms. 
+                        This exhibition showcases his iconic Black Square—a symbol of artistic rebellion—alongside striking Suprematist works that shattered 
+                        traditional boundaries. Explore how Malevich reduced painting to pure feeling, using stark shapes and vibrant colors to create a 
+                        new visual language.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <button class="see-button">See all</button>
+
+        <hr>
+
+        <h1 class="text-end">Future collections</h1>
+        <!--4-я экспозиция -->
+        <div class="col-12 col-lg-10 mt-4">
+        <div class="card border-0 p-0">
+            <div class="row g-0 align-items-center"> 
+            <div class="col-md-6">
+                <img src="images/exp4.jpg" class="custom-card2 rounded w-100">
+            </div>
+            <div class="col-md-6">
+                <div class="card-body d-flex flex-column">
+                <h3>European Art</h3>
+                <p class="card-text flex-grow-1">Journey through centuries of creativity in this breathtaking exhibition of European 
+                    masterpieces! From the luminous Renaissance portraits to the dramatic Baroque scenes, the dreamy Impressionist landscapes 
+                    to the bold strokes of Modernism—discover the evolution of art across time and cultures.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        <!--5-я экспозиция -->
+        <div class="col-12 col-lg-10 mt-4">
+        <div class="card border-0">
+            <div class="row g-0 align-items-center">
+            <div class="col-md-6 p-0">
+                <img src="images/exp5.jpg" class="custom-card2 rounded w-100">
+            </div>
+            <div class="col-md-6">
+                <div class="card-body d-flex flex-column">
+                <h3>Classical Art</h3>
+                <p class="card-text flex-grow-1">Step into the golden age of antiquity with this exquisite collection of Greek and Roman 
+                    masterpieces. Discover the perfect proportions of marble gods, the dramatic storytelling of mythological frescoes, and the 
+                    delicate beauty of Hellenistic sculptures. From powerful athletes to graceful goddesses, each work embodies the classical 
+                    ideals of balance, beauty and human perfection that inspired artists for centuries.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        <!--6-я экспозиция -->
+        <div class="col-12 col-lg-10 my-4">
+        <div class="card border-0">
+            <div class="row g-0 align-items-center">
+            <div class="col-md-6 p-0">
+                <img src="images/exp6.jpg" class="custom-card2 rounded w-100">
+            </div>
+            <div class="col-md-6">
+                <div class="card-body d-flex flex-column">
+                <h3>Abstract Art</h3>
+                <p class="card-text flex-grow-1">Dive into a world where colors, shapes, and emotions break free from tradition! 
+                    This exhibition celebrates the revolutionary power of abstract art—from Kandinsky’s vibrant compositions to Pollock’s 
+                    dynamic drips. Discover how artists abandoned realism to express pure energy, rhythm, and feeling.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <button class="see-button">See all</button>
+    </div>
+    </div>
+
+    
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-12 mb-4">
+                    <div class="logo mb-3">
+                        <div class="logo-abbr">NMA</div>
+                        <div class="logo-text">
+                            National<br>Museum<br>of Art
+                        </div>
+                    </div>
+                    <p>Open Today 9AM - 5PM</p>
+                </div>
+                <div class="col-md-4 col-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="logo-line">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-6 mb-4">
+                    <h5>About</h5>
+                    <ul class="logo-line">
+                        <li><a href="#">Annual Reports</a></li>
+                        <li><a href="#">Government Memorial</a></li>
+                        <li><a href="#">Volunteer/Teaching</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center pt-3">
+                <p>&copy; 2023 National Museum of Art. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>  
+
+    <script src="script.js"></script> 
+</body>
+</html>

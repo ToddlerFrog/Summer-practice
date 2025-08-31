@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candinskiy</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+body {  
+    background-color: rgb(249, 248, 219);  
+}  
+.card {
+    background-color: rgb(249, 248, 219);
+}
+
+@media (width <= 1200px) {
+    .header-container {
+        gap: 1.5rem;
+    }
+    .logo-section {
+        min-width: 200px;
+    }        
+    .logo-abbr {
+        font-size: 2.5rem;
+    }        
+    .logo-line {
+        font-size: 1.1rem;
+    }        
+    .buttons-container {
+        gap: 1rem;
+    }        
+    .nav-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    .banner {
+        height: 600px;
+    } 
+    .banner-text {
+        font-size: 1.6rem;
+        padding: 15px 25px;
+    }  
+    .custom-card2{
+        object-fit: cover; 
+        height: 350px;
+    }
+}
+@media (width <= 767px) {
+    .header-container {
+        gap: 1rem;
+    }
+    .logo-section {
+        min-width: auto;
+        order: 1;
+        flex: 1;
+    }        
+    .logo-abbr {
+        font-size: 2rem;
+    }
+    .logo-line {
+        font-size: 0.9rem;
+    }        
+    .search-container, .buttons-container {
+        display: none;
+    }        
+    .menu-toggle {
+        display: block;
+        order: 2;
+    }        
+    .mobile-menu.active {
+        display: block;
+        order: 4;
+    }
+    .banner-text {
+        font-size: 1rem;
+        padding: 5px 15px;
+    } 
+    .custom-card2{
+        object-fit: cover; 
+        height: 300px;
+    }
+    .banner {
+        height: 300px;
+    } 
+}
+</style>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-abbr">NMA</div>
+                <div class="logo-text">
+                    <div class="logo-line">National</div>
+                    <div class="logo-line">Museum</div>
+                    <div class="logo-line">of Art</div>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search exhibitions...">
+            </div>
+            
+           <div class="buttons-container">
+                <a href="Home.html">
+                <button class="nav-button">Home</button>
+                </a>
+                <a href="Visit.html">
+                <button class="nav-button">Visit</button>
+                </a>
+                <a href="Expositions.html">
+                <button class="nav-button">Expositions</button>
+                </a>
+            </div>
+            
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="mobile-search">
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+                 <div class="mobile-buttons">
+                    <a href="Home.html">
+                    <button class="nav-button-menu">Home</button>
+                    </a>
+                    <a href="Visit.html">
+                    <button class="nav-button-menu">Visit</button>
+                    </a>
+                    <a href="Expositions.html">
+                    <button class="nav-button-menu">Expositions</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="banner">
+        <img class="banner-img" src="images/Cand.jpg">
+        <div class="banner-text">Candinskiy</div>
+    </div>
+
+    <div class="container my-4">
+    <div class="row justify-content-center">
+        <h3>Explore the beauty of our finest artworks</h3>
+        <p class="card-text flex-grow-1">Our museum's artwork page has a curated selection of our most notable pieces and collections.
+            Featuring detailed descriptions and high-quality images, it offers insights into the artistry and
+            history behind each work. Enjoy a virtual tour of our collection from the comfort of your home.</p>
+        <h3>What can you see:</h3>
+        <div class="col-lg-10 col-12 card-container mt-4">
+                <div class="row g-4">
+                    <!-- Карточка 1 -->
+                    <div class="col-lg-3 col-6">
+                        <div class="custom-card h-100">
+                            <img src="images/cur1.jpg" class=" w-100 h-75 mb-3 card-img">
+                            <div class="card-body card-exp">
+                                <h5 class="card-text text-center">Yellow-red-blue</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка 2 -->
+                    <div class="col-lg-3 col-6">
+                        <div class="custom-card h-100">
+                            <img src="images/car2.jpg" class="w-100 h-75 mb-3 card-img">
+                            <div class="card-body card-exp">
+                                <h5 class="card-text text-center">Marnau</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка 3 -->
+                    <div class="col-lg-3 col-6">
+                        <div class="custom-card h-100">
+                            <img src="images/car3.jpg" class="w-100 h-75 mb-3 card-img">
+                            <div class="card-body card-exp">
+                                <h5 class="card-text text-center">The Blue Raider</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Карточка 4 -->
+                    <div class="col-lg-3 col-6">
+                        <div class="custom-card h-100">
+                            <img src="images/car4.jpg" class=" w-100 h-75 mb-3 card-img">
+                            <div class="card-body card-exp">
+                                <h5 class="card-text text-center">No name</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка 5 -->
+                    <div class="col-lg-3 col-6">
+                        <div class="custom-card h-100">
+                            <img src="images/car6.jpg" class="w-100 h-75 mb-3 card-img">
+                            <div class="card-body card-exp">
+                                <h5 class="card-text text-center">Composition X</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка 6 -->
+                    <div class="col-lg-3 col-6">
+                        <div class="custom-card h-100">
+                            <img src="images/car5.jpg" class="w-100 h-75 mb-3 card-img">
+                            <div class="card-body card-exp">
+                                <h5 class="card-text text-center">Moscow</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Карточка 7 -->
+                    <div class="col-lg-3 col-6">
+                        <div class="custom-card h-100">
+                            <img src="images/car7.jpg" class="w-100 h-75 mb-3 card-img">
+                            <div class="card-body card-exp">
+                                <h5 class="card-text text-center">White ellipse</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка 8 -->
+                    <div class="col-lg-3 col-6">
+                        <div class="custom-card h-100">
+                            <img src="images/exp1.jpg" class="w-100 h-75 mb-3 card-img">
+                            <div class="card-body card-exp">
+                                <h5 class="card-text text-center">Composition VII</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-12 mb-4">
+                    <div class="logo mb-3">
+                        <div class="logo-abbr">NMA</div>
+                        <div class="logo-text">
+                            National<br>Museum<br>of Art
+                        </div>
+                    </div>
+                    <p>Open Today 9AM - 5PM</p>
+                </div>
+                <div class="col-md-4 col-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="logo-line">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-6 mb-4">
+                    <h5>About</h5>
+                    <ul class="logo-line">
+                        <li><a href="#">Annual Reports</a></li>
+                        <li><a href="#">Government Memorial</a></li>
+                        <li><a href="#">Volunteer/Teaching</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center pt-3">
+                <p>&copy; 2023 National Museum of Art. All rights reserved.</p>
+            </div>
+        </div>
+    </footer> 
+
+    <script src="script.js"></script> 
+</body>
+</html>

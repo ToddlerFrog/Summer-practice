@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+    /* Все для шапки*/
+    .header, .footer {
+        background-color: #000;
+        color: #fff;
+        padding: 1.5rem 2rem; 
+    }
+    .header-container {
+        display: flex; /* гибкий контейнер */
+        flex-wrap: wrap; /*перенос*/
+        align-items: center; /*вдоль поперечной оси*/
+        width: 100%;
+        margin: 0 auto; /*0 — обнуляет верхний и нижний отступы. auto — автоматически распределяет пространство по бокам (слева и справа).*/
+        gap: 2rem;
+    }
+    .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        min-width: 300px;
+    }   
+    .logo-abbr {
+        font-size: 3rem; /*размер шрифта*/
+        font-weight: bold; 
+    }    
+    .logo-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2; /*высота строки*/
+    }       
+    .logo-line {
+        font-size: 1.3rem;
+        font-family: 'Georgia', serif;
+    }
+    /*Поисковая строка */
+    .search-container {
+        flex: 1; /* Элемент может растягиваться */
+        min-width: 100px;
+        max-width: 500px;
+        margin: 0 auto;
+    }       
+    .search-input {
+        width: 100%;
+        padding: 0.6rem 1rem; /*сверху/снизу и слева/справа*/
+        border: 1px solid #555; /*сплошная*/
+        background-color: #222;
+        color: #fff;
+        font-size: 1rem;
+        border-radius: 4px;
+    }    
+    .search-input::placeholder {
+        color: #999;
+    }
+    /* Кнопки */
+    .buttons-container {
+        display: flex;
+        gap: 1.5rem;
+        margin-left: auto;
+    }
+    .nav-button {
+        padding: 0.7rem 1.5rem;
+        background-color: transparent;
+        color: #fff;
+        border: 2px solid #fff;
+        font-size: 1rem;
+        font-weight: 500;
+        text-transform: uppercase; /*капс*/
+        cursor: pointer;
+        transition: all 0.3s; /*плавный переход для всех свойств*/
+        white-space: nowrap;/*нельзяьделать пренос*/
+        }  
+    .nav-button-menu {
+        padding: 0.7rem 1.5rem;
+        background-color: transparent;
+        color: #fff;
+        border: 2px solid #fff;
+        font-size: 1rem;
+        font-weight: 500;
+        text-transform: uppercase; /*капс*/
+        cursor: pointer;
+        transition: all 0.3s; /*плавный переход для всех свойств*/
+        white-space: nowrap;/*нельзя делать пренос*/
+        width: 100%;
+        }      
+    .nav-button:hover {
+        background-color: #fff;
+        color: #000;
+    }
+    .nav-button-menu:hover {
+        background-color: #fff;
+        color: #000;
+    }
+    /*Для мобильного меню*/
+    .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.8rem;
+        cursor: pointer;
+        margin-left: auto;
+    }    
+    .mobile-menu {
+        display: none;
+        width: 100%;
+        padding-top: 1rem;
+    }       
+    .mobile-search {
+        width: 100%;
+        margin-bottom: 1rem;
+    }    
+    .mobile-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    /*Все для банера*/
+    .banner {
+        position: relative;/*для опред места*/
+        height: 700px;
+        width: 100%;
+        overflow: hidden; /*Полосы прокрутки никогда не появятся*/
+    }     
+    .banner-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Чтобы изображение заполнило весь баннер */
+    }
+    .banner-text {
+        position: absolute; /*для места в объекте*/
+        bottom: 20px; /*сдвиг вверх*/
+        font-size: 2.2rem;
+        color: white;
+        padding: 20px 30px;
+        font-family: 'Georgia', serif;
+    }        
+    .card {
+        background-color: rgb(249, 248, 219);
+    }
+    .card-exp{
+        border: 1px solid #000000;
+    }
+    body {  
+        background-color: rgb(249, 248, 219);  
+    }  
+    .custom-card {
+        border: none;
+        margin-bottom: 10px;
+        transition: transform 0.3s;
+
+    }
+    .custom-card:hover {
+        transform: translateY(-5px);
+    }
+    .hologram {
+        transition: transform 0.5s;
+    }
+    .hologram:hover {
+        transform: perspective(800px) rotateY(20deg) scale(1.05); /*смещение к нам поворот на 20град увеличение картинки на 5%*/
+        filter: drop-shadow(0 0 10px rgba(255, 241, 114, 0.7));/*тень*/
+    }
+    .card-img{
+        object-fit: cover;
+    }
+    .card-img2{
+        object-fit: cover;  
+        border-radius: 8px;
+    }
+    h3{
+        font-family: 'Georgia', serif; 
+        font-weight: bold;
+    }
+    h1{
+        color: #000;
+        font-family: 'Georgia', serif;
+        font-weight: bold;
+    }
+    @media (max-width: 1200px) {
+        .header-container {
+            gap: 1.5rem;
+        }
+        .logo-section {
+            min-width: 200px;
+        }        
+        .logo-abbr {
+            font-size: 2.5rem;
+        }        
+        .logo-line {
+            font-size: 1.1rem;
+        }        
+        .buttons-container {
+            gap: 1rem;
+        }        
+        .nav-button {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+        .banner {
+            height: 600px;
+        }  
+        .banner-text {
+            font-size: 1.6rem;
+            padding: 15px 25px;
+        }  
+    }
+    @media (max-width: 767px) {
+        .header-container {
+            gap: 1rem;
+        }
+        .logo-section {
+            min-width: auto;
+            order: 1;
+            flex: 1;
+        }        
+        .logo-abbr {
+            font-size: 2rem;
+        }
+        .logo-line {
+            font-size: 0.9rem;
+        }        
+        .search-container, .buttons-container {
+            display: none;
+        }        
+        .menu-toggle {
+            display: block;
+            order: 2;
+        }        
+        .mobile-menu.active {
+            display: block;
+            order: 4;
+        }
+        .banner-text {
+            font-size: 1rem;
+            padding: 5px 15px;
+        } 
+        .banner {
+            height: 300px;
+        } 
+}
+
+</style>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-abbr">NMA</div>
+                <div class="logo-text">
+                    <div class="logo-line">National</div>
+                    <div class="logo-line">Museum</div>
+                    <div class="logo-line">of Art</div>
+                </div>
+            </div>
+             
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search exhibitions...">
+            </div>
+            <!-- ПЕРЕДЕЛАТЬ БРАУЗЕРНЫЕ СОБЫТИЯ  -->
+            <div class="buttons-container">
+                <a href="Home.html">
+                <button class="nav-button">Home</button>
+                </a>
+                <a href="Visit.html">
+                <button class="nav-button">Visit</button>
+                </a>
+                <a href="Expositions.html">
+                <button class="nav-button">Expositions</button>
+                </a>
+            </div>
+            
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="mobile-search">
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+                <div class="mobile-buttons">
+                    <a href="Home.html">
+                    <button class="nav-button-menu">Home</button>
+                    </a>
+                    <a href="Visit.html">
+                    <button class="nav-button-menu">Visit</button>
+                    </a>
+                    <a href="Expositions.html">
+                    <button class="nav-button-menu">Expositions</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="banner">
+        <img class="banner-img" src="images/main.jpg">
+        <div class="banner-text">Welcome to the National Museum of Art</div>
+    </div>
+
+    <div class="container my-5">
+    <div class="row justify-content-center"> <!-- Центрирует элементы по главной оси гориз. -->
+        <div class="col-12 col-lg-10">
+        <div class="card border-0"> <!--полностью убирает границу -->
+            <div class="row g-0 align-items-center"> <!-- g-0 убирает промежутки между колонками верт.-->
+            <div class="col-md-6">
+                <img src="images/2.jpg" class="img-fluid rounded hologram card-img">
+            </div>
+<!-- 1 инфо-->
+            <div class="col-md-6">
+                <div class="card-body h-100 d-flex flex-column">
+                <h3>See The World</h3>
+                <p class="card-text flex-grow-1">The National Museum of Art (NMA) in France is
+                    a prestigious institution showcasing a diverse
+                    collection of artworks from various periods and
+                    styles. Situated in a grand historic building, it
+                    features masterpieces spanning from classical
+                    to contemporary art. The museum offers
+                    visitors a rich cultural experience with its
+                    extensive exhibitions and carefully curated
+                    collections.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+<!-- 2 инфо-->
+    <div class="container my-5 ">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+        <div class="card border-0">
+            <div class="row g-0 align-items-center">
+            <div class="col-md-6">
+                <img src="images/3.jpg" class="img-fluid rounded hologram card-img">
+            </div>
+            <div class="col-md-6">
+                <div class="card-body h-100 d-flex flex-column">
+                <h3>On View</h3>
+                <p class="card-text flex-grow-1">There's always something new on view at The
+                National Museum of Art (NMA). Enjoy the new
+                exhibits that we currently have. The museum's
+                dynamic galleries ensure a fresh and engaging
+                experience for every visit.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <h1 class="text-center">Current expositions</h1>
+    
+    <div class="container-fluid my-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-12">
+                <div class="row g-4">
+                    <!-- Карточка 1 -->
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="custom-card h-100">
+                            <a href="Candinskiy.html">
+                                <img src="images/cur1.jpg" class=" w-100 h-75 mb-3">
+                            </a>
+                            <div class="card-body card-exp rounded-pill">
+                                <h5 class="card-text text-center">Candinsky</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка 2 -->
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="custom-card h-100">
+                            <img src="images/cur2.jpg" class="w-100 h-75 mb-3">
+                            <div class="card-body card-exp rounded-pill">
+                                <h5 class="card-text text-center">van Gogh</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Карточка 3 -->
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="custom-card h-100">
+                            <img src="images/cur3.jpg" class="w-100 h-75 mb-3">
+                            <div class="card-body card-exp rounded-pill">
+                                <h5 class="card-text text-center">Malevich</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-12 mb-4">
+                    <div class="logo mb-3">
+                        <div class="logo-abbr">NMA</div>
+                        <div class="logo-text">
+                            National<br>Museum<br>of Art
+                        </div>
+                    </div>
+                    <p>Open Today 9AM - 5PM</p>
+                </div>
+                <div class="col-md-4 col-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="logo-line">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-6 mb-4">
+                    <h5>About</h5>
+                    <ul class="logo-line">
+                        <li><a href="#">Annual Reports</a></li>
+                        <li><a href="#">Government Memorial</a></li>
+                        <li><a href="#">Volunteer/Teaching</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center pt-3">
+                <p>&copy; 2023 National Museum of Art. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>  
+
+    <script src="script.js"></script> 
+</body>
+</html>
